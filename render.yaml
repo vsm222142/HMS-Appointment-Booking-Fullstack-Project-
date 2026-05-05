@@ -3,7 +3,7 @@ services:
     name: hms-backend
     env: docker
     dockerContext: ./hms-backend
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: hms-backend/Dockerfile
     plan: free
     region: singapore
     envVars:
