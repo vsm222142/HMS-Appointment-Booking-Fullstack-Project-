@@ -7,10 +7,18 @@ services:
     plan: free
     region: singapore
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: DB_HOST
         fromDatabase:
           name: hms-db
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: hms-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: hms-db
+          property: database
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: hms-db
