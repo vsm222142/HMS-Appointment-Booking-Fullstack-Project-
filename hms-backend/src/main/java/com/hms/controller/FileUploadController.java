@@ -14,29 +14,22 @@ import java.util.UUID;
 @RequestMapping("/api/public")
 public class FileUploadController {
 
-    private final Path root = Paths.get("./uploads");
-
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            if (!Files.exists(root)) {
-                Files.createDirectories(root);
-            }
-
-            String filename = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            Files.copy(file.getInputStream(), this.root.resolve(filename));
-
-            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/uploads/")
-                    .path(filename)
-                    .toUriString();
+            byte[] bytes = file.getBytes();
+            String base64 = java.util.Base64.getEncoder().encodeToString(bytes);
+            String contentType = file.getContentType();
+            if (contentType == null) contentType = "image/png";
+            
+            String dataUri = "data:" + contentType + ";base64," + base64;
 
             return ResponseEntity.ok(Map.of(
-                    "url", fileDownloadUri,
+                    "url", dataUri,
                     "message", "File uploaded successfully"
             ));
         } catch (IOException e) {
-            return ResponseEntity.status(500).body(Map.of("message", "Could not upload file: " + e.getMessage()));
+            return ResponseEntity.status(500).body(Map.of("message", "Could not process file: " + e.getMessage()));
         }
     }
 }
