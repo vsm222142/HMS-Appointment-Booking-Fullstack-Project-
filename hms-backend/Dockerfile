@@ -10,8 +10,18 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
-# Create uploads directory
+# Create uploads directory for doctor profile images
 RUN mkdir -p uploads
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+# If DB_HOST is set (Render environment), build the JDBC PostgreSQL URL
+# Otherwise the application.properties default (MySQL) will be used
+ENTRYPOINT ["sh", "-c", "\
+  if [ -n \"$DB_HOST\" ]; then \
+    export SPRING_DATASOURCE_URL=\"jdbc:postgresql://$DB_HOST:${DB_PORT:-5432}/${DB_NAME:-hms_db}\"; \
+    export DB_DRIVER=\"org.postgresql.Driver\"; \
+    export DB_DIALECT=\"org.hibernate.dialect.PostgreSQLDialect\"; \
+  fi; \
+  exec java -Xmx512m -jar app.jar \
+"]
