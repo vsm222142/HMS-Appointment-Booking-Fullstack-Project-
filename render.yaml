@@ -31,6 +31,10 @@ services:
         generateValue: true
       - key: ALLOWED_ORIGINS
         value: "*" # We can restrict this later once we have the Vercel URL
+      - key: DB_DRIVER
+        value: "org.postgresql.Driver"
+      - key: DB_DIALECT
+        value: "org.hibernate.dialect.PostgreSQLDialect"
       - key: JAVA_OPTS
         value: "-Xmx512m"
 
