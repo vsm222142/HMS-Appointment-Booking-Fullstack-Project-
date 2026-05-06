@@ -30,7 +30,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: ALLOWED_ORIGINS
-        value: "*" # We can restrict this later once we have the Vercel URL
+        value: "http://localhost:5173,https://hms-appointment-booking-fullstack-p.vercel.app"
       - key: DB_DRIVER
         value: "org.postgresql.Driver"
       - key: DB_DIALECT
